@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="Ball.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="GameStates.h" />
     <ClInclude Include="Platform.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
