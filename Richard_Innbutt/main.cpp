@@ -141,6 +141,16 @@ int main()
             for (const auto& platform : platforms) {
                 window.draw(platform.shape);
             }
+
+            if (sf::Joystick::getAxisPosition(0, sf::Joystick::X) > 30) {
+				platforms[platforms.size() - 1].shape.move(5, 0);
+            }
+            else if (sf::Joystick::getAxisPosition(0, sf::Joystick::X) < -30) {
+                platforms[platforms.size() - 1].shape.move(-5, 0);
+            }
+            else {
+                
+            }
             break;
         }
 
