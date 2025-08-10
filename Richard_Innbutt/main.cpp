@@ -14,19 +14,58 @@
 std::vector<Platform> createPlatforms(int windowXSize, int windowYSize, int level) {
     std::vector<Platform> platforms;
 
+    // Border sizes
+    float verticalBorderWidth = windowYSize * 0.0740740741f;
+    float horizontalBorderHeight = windowXSize * 0.0416666667f;
+
     // Ground
-    platforms.emplace_back(0.f, static_cast<float>(windowYSize - 80),
-        static_cast<float>(windowXSize), 80.f,
-        sf::Color(128, 128, 128));
+    platforms.emplace_back(0.f, windowYSize - verticalBorderWidth,
+        windowXSize, verticalBorderWidth, sf::Color(128, 128, 128));
 
-    int numOfPlatforms = 10;
-    float blockWidth = windowXSize / (numOfPlatforms + (numOfPlatforms - 1) * 0.1f);
-    float gap = blockWidth * 0.1f;
+    // Top border
+    platforms.emplace_back(0.f, 0.f,
+        windowXSize, verticalBorderWidth, sf::Color(128, 128, 128));
 
-    for (int i = 0; i < numOfPlatforms; ++i) {
-        float x = i * (blockWidth + gap);
-        platforms.emplace_back(x, 0.f, blockWidth, blockWidth, sf::Color::Blue);
+    // Left border
+    platforms.emplace_back(0.f, 0.f,
+        horizontalBorderHeight, windowYSize, sf::Color(128, 128, 128));
+
+    // Right border
+    platforms.emplace_back(windowXSize - horizontalBorderHeight, 0.f,
+        horizontalBorderHeight, windowYSize, sf::Color(128, 128, 128));
+
+    // Platform settings
+    int rows = 3;
+    int numPlatforms = 20 * level; // same for each row
+	float blockGapPercentage = 0.05f; // 25% gap between blocks
+    float availableWidth = windowXSize - 2 * verticalBorderWidth;
+    float availableHeight = windowYSize - 2 * horizontalBorderHeight;
+
+    float blockWidth = availableWidth / (numPlatforms + (numPlatforms - 1.0) * blockGapPercentage); // 25% gap
+    float gapX = blockWidth * blockGapPercentage;
+    float blockHeight = blockWidth; // square blocks
+
+    // Vertical spacing between rows inside borders
+    float verticalGap = (availableHeight - rows * blockHeight) / (rows + 1);
+    float gapY = blockHeight * blockGapPercentage;
+
+    for (int row = 0; row < rows; ++row) {
+        float y = horizontalBorderHeight + (blockHeight + gapY) * row;
+
+        for (int i = 0; i < numPlatforms; ++i) {
+            float x = horizontalBorderHeight + i * (blockWidth + gapX);
+            platforms.emplace_back(x, y, blockWidth, blockHeight, sf::Color::Blue);
+        }
     }
+
+	float xSizeOfPlayerPlatform = 50.f; // Width of the platform for the player
+    float ySizeOfPlayerPlatform = 10.f; // Height of the platform for the player
+    // Calculate the position for the player platform
+    float x = (windowXSize - xSizeOfPlayerPlatform) / 2.f; // Centered horizontally
+    float y = windowYSize - horizontalBorderHeight - ySizeOfPlayerPlatform; // Centered vertically
+    // Create a platform for the player
+	platforms.emplace_back(x, y, xSizeOfPlayerPlatform, ySizeOfPlayerPlatform, sf::Color::Red);
+
 
     return platforms;
 }
